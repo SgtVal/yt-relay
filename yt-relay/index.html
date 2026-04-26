@@ -7,54 +7,22 @@
 <title>YT Relay</title>
 <style>
 *{margin:0;padding:0;overflow:hidden;background:#000}
-#ytframe{width:100vw;height:100vh;border:none}
+iframe{width:100vw;height:100vh;border:none}
 </style>
 </head>
 <body>
-<iframe id="ytframe"
-  referrerpolicy="strict-origin-when-cross-origin"
-  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-  allowfullscreen>
-</iframe>
 <script>
 var p=new URLSearchParams(location.search);
 var v=p.get("v");
 var s=parseInt(p.get("start"),10)||0;
-var frame=document.getElementById("ytframe");
-
 if(v&&/^[A-Za-z0-9_-]{11}$/.test(v)){
-frame.src="https://www.youtube-nocookie.com/embed/"+v
-+"?autoplay=1&mute=1&controls=1&playsinline=1&rel=0&fs=0&enablejsapi=1&start="+s
-+"&origin="+encodeURIComponent(location.origin)
-+"&widgetid=1";
-
-var unmuted=false;
-function tryUnmute(){
-if(unmuted)return;
-var msg=JSON.stringify({event:"command",func:"unMute",args:[]});
-var vol=JSON.stringify({event:"command",func:"setVolume",args:[100]});
-frame.contentWindow.postMessage(msg,"*");
-frame.contentWindow.postMessage(vol,"*");
-}
-
-window.addEventListener("message",function(e){
-try{
-var d=JSON.parse(e.data);
-if(d.event==="onStateChange"&&d.info===1&&!unmuted){
-unmuted=true;
-setTimeout(tryUnmute,500);
-}
-if(d.event==="initialDelivery"||d.event==="infoDelivery"){
-if(!unmuted){
-unmuted=true;
-setTimeout(tryUnmute,1000);
-}
-}
-}catch(ex){}
-});
-
-setTimeout(tryUnmute,3000);
-setTimeout(tryUnmute,6000);
+var f=document.createElement("iframe");
+f.src="https://www.youtube-nocookie.com/embed/"+v
++"?autoplay=1&controls=1&playsinline=1&rel=0&fs=0&start="+s;
+f.setAttribute("referrerpolicy","strict-origin-when-cross-origin");
+f.setAttribute("allow","accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture");
+f.setAttribute("allowfullscreen","");
+document.body.appendChild(f);
 }
 </script>
 </body>
