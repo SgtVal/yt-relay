@@ -7,22 +7,35 @@
 <title>YT Relay</title>
 <style>
 *{margin:0;padding:0;overflow:hidden;background:#000}
-iframe{width:100vw;height:100vh;border:none}
+iframe{width:100vw;height:100vh;border:none;display:none}
+#overlay{width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+#thumb{width:100vw;height:100vh;object-fit:cover;position:absolute;top:0;left:0;opacity:.7}
+#play{width:80px;height:80px;background:rgba(255,0,0,.85);border-radius:16px;display:flex;align-items:center;justify-content:center;z-index:2;box-shadow:0 4px 30px rgba(0,0,0,.6)}
+#play:after{content:"";border-style:solid;border-width:18px 0 18px 32px;border-color:transparent transparent transparent #fff;margin-left:4px}
 </style>
 </head>
 <body>
+<div id="overlay">
+<img id="thumb" src="" alt="">
+<div id="play"></div>
+</div>
 <script>
 var p=new URLSearchParams(location.search);
 var v=p.get("v");
 if(v&&/^[A-Za-z0-9_-]{11}$/.test(v)){
 var s=parseInt(p.get("start"),10)||0;
+document.getElementById("thumb").src="https://img.youtube.com/vi/"+v+"/maxresdefault.jpg";
+document.getElementById("overlay").addEventListener("click",function(){
+this.style.display="none";
 var f=document.createElement("iframe");
 f.src="https://www.youtube-nocookie.com/embed/"+v
 +"?autoplay=1&controls=1&playsinline=1&rel=0&fs=0&enablejsapi=1&start="+s;
 f.setAttribute("referrerpolicy","strict-origin-when-cross-origin");
 f.setAttribute("allow","autoplay; encrypted-media");
 f.setAttribute("allowfullscreen","");
+f.style.display="block";
 document.body.appendChild(f);
+});
 }
 </script>
 </body>
