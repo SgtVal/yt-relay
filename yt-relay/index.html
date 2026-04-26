@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>YT Relay</title>
+<style>
+*{margin:0;padding:0;overflow:hidden;background:#000}
+iframe{width:100vw;height:100vh;border:none}
+</style>
+</head>
+<body>
+<script>
+var p=new URLSearchParams(location.search);
+var v=p.get("v");
+if(v&&/^[A-Za-z0-9_-]{11}$/.test(v)){
+var s=parseInt(p.get("start"),10)||0;
+var f=document.createElement("iframe");
+f.src="https://www.youtube-nocookie.com/embed/"+v
++"?autoplay=1&controls=1&playsinline=1&rel=0&fs=0&enablejsapi=1&start="+s;
+f.setAttribute("referrerpolicy","strict-origin-when-cross-origin");
+f.setAttribute("allow","autoplay; encrypted-media");
+f.setAttribute("allowfullscreen","");
+document.body.appendChild(f);
+}
+</script>
+</body>
+</html>
